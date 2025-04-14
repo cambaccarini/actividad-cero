@@ -3,50 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles de la Encuesta</title>
+    <title>Votar: {{ question.question_text }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         h1 {
             color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        fieldset {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: white;
         }
-        li {
+        legend {
+            font-weight: bold;
+            color: #3498db;
+            padding: 0 10px;
+        }
+        .radio-option {
+            margin: 10px 0;
+            padding: 8px;
             background: #f9f9f9;
-            margin: 5px 0;
+            border-radius: 4px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .error {
+            color: #e74c3c;
+            background: #fde8e8;
             padding: 10px;
-            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <h1>{{ question.question_text }}</h1>
-    
-    {% if error_message %}
-        <div class="error" style="color: red; background: #ffeeee; padding: 10px; margin-bottom: 15px;">
-            <strong>Error:</strong> {{ error_message }}
-        </div>
-    {% endif %}
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>{{ question.question_text }}</h1></legend>
+            
+            {% if error_message %}
+                <div class="error">
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+            
+            {% for choice in question.choice_set.all %}
+                <div class="radio-option">
+                    <input type="radio" 
+                           name="choice" 
+                           id="choice{{ forloop.counter }}" 
+                           value="{{ choice.id }}">
+                    <label for="choice{{ forloop.counter }}">
+                        {{ choice.choice_text }}
+                    </label>
+                </div>
+            {% endfor %}
+        </fieldset>
+        
+        <input type="submit" value="Votar">
+    </form>
 
-    <ul>
-    {% for choice in question.choice_set.all %}
-        <li>{{ choice.choice_text }}</li>
-    {% empty %}
-        <li>No hay opciones disponibles para esta pregunta.</li>
-    {% endfor %}
-    </ul>
-
-    <a href="{% url 'polls:index' %}" style="display: inline-block; margin-top: 20px; color: #3498db; text-decoration: none;">
+    <a href="{% url 'polls:index' %}" class="back-link">
         ← Volver a la lista de encuestas
     </a>
 </body>

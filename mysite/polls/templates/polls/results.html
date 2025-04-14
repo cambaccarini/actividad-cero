@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados: {{ question.question_text }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        li {
+            background: #ffffff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .votes-count {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .vote-again {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .vote-again:hover {
+            background-color: #2980b9;
+        }
+        .total-votes {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f1c40f;
+            border-left: 4px solid #f39c12;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ question.question_text }}</h1>
+
+    <ul>
+    {% for choice in question.choice_set.all %}
+        <li>
+            <span>{{ choice.choice_text }}</span>
+            <span class="votes-count">
+                {{ choice.votes }} vote{{ choice.votes|pluralize }}
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <div class="total-votes">
+        Total votes: {{ question.total_votes }}
+    </div>
+
+    <a href="{% url 'polls:detail' question.id %}" class="vote-again">
+        Vote again?
+    </a>
+
+    <div style="margin-top: 30px;">
+        <a href="{% url 'polls:index' %}" style="color: #3498db; text-decoration: none;">
+            ← Back to all polls
+        </a>
+    </div>
+</body>
+</html>
