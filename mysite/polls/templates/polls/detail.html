@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Encuesta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ question.question_text }}</h1>
+    
+    {% if error_message %}
+        <div class="error" style="color: red; background: #ffeeee; padding: 10px; margin-bottom: 15px;">
+            <strong>Error:</strong> {{ error_message }}
+        </div>
+    {% endif %}
+
+    <ul>
+    {% for choice in question.choice_set.all %}
+        <li>{{ choice.choice_text }}</li>
+    {% empty %}
+        <li>No hay opciones disponibles para esta pregunta.</li>
+    {% endfor %}
+    </ul>
+
+    <a href="{% url 'polls:index' %}" style="display: inline-block; margin-top: 20px; color: #3498db; text-decoration: none;">
+        ← Volver a la lista de encuestas
+    </a>
+</body>
+</html>
